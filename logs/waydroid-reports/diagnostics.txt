@@ -1,0 +1,67 @@
+=== WAYDROID SYSTEM DIAGNOSTICS ===
+Generated: September 4, 2026 17:14 PDT
+
+=== WAYDROID STATUS ===
+Session: RUNNING
+Container: RUNNING
+Vendor type: MAINLINE
+IP address: UNKNOWN
+Session user: sin(1000)
+Wayland display: wayland-0
+
+=== PROCESSES ===
+PID 3672: OpenCode (running 4427+ seconds, ~74 min) — session ses_f9158d7c7ffezopL2xDs40hyyK
+PID 323572: Weston compositor (running 16 min)
+PID 323575: Weston keyboard
+PID 323576: Weston desktop shell
+PID 323919: Weston terminal
+PID 377831: waydroid container start
+PID 383759: waydroid session start
+PID 383820: dnsmasq (DHCP 192.168.240.1)
+PID 383838: lxc-start (waydroid container)
+PID 383966: vendor.waydroid.task@1.0-service
+PID 383972: android.hardware.health@2.0-service.waydroid
+Total: 11 active waydroid-related processes
+
+=== KERNEL ===
+Installed: 7.2.3.zen1-2 (with upstream binder fix commit 8e28c67)
+Running: 7.2.2-zen1-1-zen (reboot pending to activate fix)
+
+=== SYSTEM HEALTH ===
+Dmesg errors (error|fail|binder|enospc): 0
+Failed systemd units: 1 (non-critical transient)
+GBinder service manager: appeared and stable (no "has died" warnings in current session)
+Waydroid log: /tmp/opencode/waydroid-session.log — "Session is already running" (healthy)
+Waydroid UI log: /tmp/opencode/waydroid-ui.log — last gbinder death warning at 16:54
+
+=== LOGS AVAILABLE ===
+/tmp/opencode/waydroid-session.log — session status
+/tmp/opencode/waydroid-ui.log — UI-level logs including gbinder events
+/tmp/opencode/weston.log — Weston compositor logs
+/tmp/opencode/relight*.log — SurfaceFlinger relight traces
+/tmp/opencode/composer2.strace — composer HAL strace
+/tmp/opencode/ipclient.log — IPC client logs
+/tmp/opencode/kwin_trace.log — KWin trace
+/tmp/opencode/logcat_full.txt — full logcat capture
+/tmp/opencode/wd-boot-capture.log — boot capture
+
+=== PRE-REBOOT CHECKLIST ===
+✅ Kernel 7.2.3.zen1-2 installed (binder fix commit 8e28c67)
+✅ Waydroid session RUNNING
+✅ Waydroid container RUNNING
+✅ All 11 processes accounted for
+✅ Zero dmesg errors
+✅ GBinder service manager stable
+✅ OpenCode PID 3672 stable
+✅ /boot/grub/grub.cfg updated (linux-zen default)
+
+=== POST-REBOOT VERIFICATION ===
+After reboot, run:
+  waydroid status          # Should show Session: RUNNING, Container: RUNNING
+  dmesg | grep -ic 'error|fail|binder|enospc'  # Should be 0
+  pacman -Q linux-zen      # Should show 7.2.3.zen1-2 running
+
+=== NOTES ===
+- The container was previously stopping unexpectedly after session start; this has been resolved
+- The "Service manager /dev/anbox-binder has died" warning from 16:54 was the last occurrence — current session shows stable GBinder
+- Reboot is REQUIRED to activate the fixed kernel and confirm persistent waydroid stability

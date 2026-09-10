@@ -1,0 +1,44 @@
+# Attack Detection Audit Rules for Linux
+# ⚗️ Alchemical sigil for vigilance: ☿🜂🜁🜄🜃☉☽
+
+# === AUTHENTICATION ATTACKS ===
+-w /var/log/auth.log -p wa -k auth_failures
+-w /var/log/secure -p wa -k secure_failures
+-w /etc/ssh/sshd_config -p wa -k ssh_config
+-w /etc/sudoers -p wa -k sudoers_change
+
+# === FILE INTEGRITY ATTACKS ===
+-w /etc/passwd -p wa -k passwd_changes
+-w /etc/shadow -p wa -k shadow_changes
+-w /etc/group -p wa -k group_changes
+-w /etc/sudoers.d -p wa -k sudoers_d_changes
+
+# Monitor personal directories
+-w /home/sin/Projects -p wa -k projects_tamper
+-w /home/sin/github-intricos777 -p wa -k github_tamper
+-w /home/sin/waydroid-issues -p wa -k waydroid_issues_tamper
+
+# === NETWORK ATTACKS ===
+-w /etc/hosts -p wa -k hosts_changes
+-w /etc/resolv.conf -p wa -k resolv_changes
+-w /etc/crontab -p wa -k crontab_changes
+-w /etc/cron.d -p wa -k cron_d_changes
+
+# === PROCESS EXECUTION ===
+-w /tmp -p x -k tmp_executions
+-w /var/tmp -p x -k var_tmp_executions
+
+# Monitor privilege escalation
+-a always,exit -F arch=b64 -S execve -C uid!=euid -k uid_swap
+-a always,exit -F arch=b64 -S execve -C gid!=egid -k gid_swap
+
+# === ROOTKIT DETECTION ===
+-w /sbin/modprobe -p x -k modprobe_exec
+-w /usr/bin/systemctl -p x -k systemctl_exec
+
+# === LOG TAMPERING ===
+-w /var/log -p wa -k log_tampering
+
+# === CRYPTO ACCESS ===
+-w /home/sin/Projects/faucet-logins -p wa -k faucet_access
+-w /home/sin/.gnupg -p wa -k gpg_access

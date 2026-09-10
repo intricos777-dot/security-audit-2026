@@ -1,0 +1,61 @@
+=== WAYDROID DIAGNOSIS ===
+Date: 2026-09-03
+Host: Linux 7.2.2-zen1-1-zen
+Distro: Garuda Linux / Arch-based
+Kernel: linux-zen 7.2.2.zen1-1
+Waydroid: 1.6.3-1
+LXC: 1:7.0.0-2
+
+CURRENT STATE
+-------------
+waydroid status: Session: RUNNING, Container: RUNNING
+Wayland display: wayland-0
+IP address: UNKNOWN
+Vendor type: MAINLINE
+Session user: sin(1000)
+
+IMAGES / CONFIG
+---------------
+System image: /usr/share/waydroid-extra/images/system.img (ext2, 2.5GB)
+Vendor image: /usr/share/waydroid-extra/images/vendor.img (ext2, 561MB)
+Installed package: waydroid-image-gapps 20.0_20260428-1
+waydroid.cfg: system_type=VANILLA, vendor_type=MAINLINE
+Waydroid init images_path = /usr/share/waydroid-extra/images
+
+CONTAINER PROCESSES
+-------------------
+python3 /usr/bin/waydroid container start (root)
+python3 /usr/bin/waydroid session start (sin)
+lxc-start -P /var/lib/waydroid/lxc -F -n waydroid -- /init
+dnsmasq on waydroid0
+Multiple /system/bin/hw/* HAL services running
+
+NETWORK
+-------
+waydroid0: UP, 192.168.240.1/24
+DNS: /etc/resolv.conf using 10.128.128.128#53
+DHCP range: 192.168.240.2 - 192.168.240.254
+firewalld active, target DROP on wlo1
+nftables DEVICE-GUARD on waydroid0 allows UDP/53,67, TCP/53,67 and other traffic, but default is DROP
+
+FOUND ISSUES
+------------
+1. Kernel regression risk: linux-zen 7.2.2 has CONFIG_ANDROID_BINDER_IPC_RUST=y, classic CONFIG_ANDROID_BINDER_IPC is not set. Known Waydroid regression on 6.18+ kernels; see github.com/waydroid/waydroid/issues/2157. Session does boot here, but audio/transaction issues have been reported on same kernel config pattern.
+2. Image mismatch: waydroid-image-gapps is installed, but init used VANILLA system_type. This may explain missing vendor.audio-hal-2-0.
+3. Missing HAL: vendor.audio-hal-2-0 binary not found. dmesg: "Could not start service 'vendor.audio-hal-2-0' as part of class 'hal': Cannot find '/vendor/bin/hw/android.hardware.audio@2.0-service'".
+4. cgroup read-only errors: Android init tries to create cgroups under /sys/fs/cgroup but gets "Read-only file system". Non-fatal, but indicates cgroupv2 layout mismatch.
+5. lxc.hook.post-stop failure: lxc-start script exits 126 during shutdown. Repeated in waydroid.log. Non-fatal, but noisy.
+6. IP address UNKNOWN: container IP not reported to host. DHCP traffic visible in dmesg, but waydroid status cannot fetch container IP.
+7. No ashmem_linux module: modprobe ashmem_linux fails. Binderfs exists via /dev/binderfs, but ashmem is absent.
+8. waydroid session start initially failed with DBUS_SESSION_BUS_ADDRESS autolaunch disabled; fixed by exporting DBUS_SESSION_BUS_ADDRESS and XDG_RUNTIME_DIR explicitly.
+
+VERIFIED WORKING
+---------------
+- waydroid init completes
+- waydroid-container.service enabled and active
+- lxc container boots and stays RUNNING
+- Android init completes boot
+- HAL services start (except audio-hal)
+- Wayland socket forwarded: /run/user/1000/wayland-0 mounted in container
+- Audio sink present on host
+- App list visible (Files, Messages, Play Store, Recorder, Google)

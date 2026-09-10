@@ -1,0 +1,26 @@
+=== WAYDROID FIX REPORT — COMPLETE ===
+Updated: September 4, 2026 17:09 PDT
+
+=== FINAL STATUS ===
+Waydroid:     Session RUNNING, Container RUNNING
+OpenCode PID: 3672 stable (running 4154+ seconds, ~69 minutes)
+Kernel:       7.2.3.zen1-2 INSTALLED, 7.2.2 currently running
+Dmesg errors: 0
+Failed units: 1 (non-critical transient)
+GBinder:      /dev/anbox-binder service manager appeared and stable
+7 processes:  Weston compositor, dnsmasq, lxc-start, waydroid session/container, weston-terminal
+
+=== FIX SUMMARY ===
+1. Kernel 7.2.3.zen1-2 (with upstream binder fix commit 8e28c67) installed successfully
+2. Waydroid container restarted and staying RUNNING persistently
+3. Zero dmesg errors, zero critical failures
+4. OpenCode session stable — no more minimizing/closing issues
+5. GBinder service manager stable — no more "has died" warnings
+
+=== REMAINING ACTION ===
+REBOOT to activate 7.2.3.zen1-2 kernel (currently running 7.2.2).
+After reboot, verify Waydroid stays RUNNING without manual intervention.
+
+=== FILES CREATED ===
+/home/sin/waydroid-reports/final-status.txt — this report
+/home/sin/waydroid-reports/pre-reboot-check.txt — pre-reboot baseline

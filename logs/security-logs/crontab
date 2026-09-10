@@ -1,0 +1,15 @@
+# Attack Monitoring Cron Configuration
+# ☿ Set the watchtowers to guard while you sleep
+
+# Run attack detection every 5 minutes
+*/5 * * * * /usr/bin/python3 /home/sin/bin/attack-monitor.py >> /home/sin/security-logs/cron.log 2>&1
+
+# Rotate logs weekly
+0 0 * * 0 /usr/bin/logrotate -f /home/sin/security-logs/logrotate.conf 2>/dev/null
+
+# Archive daily logs
+0 0 * * * if [ -f /home/sin/security-logs/attacks.json ]; then
+    DATE=$(date +%Y%m%d)
+    cp /home/sin/security-logs/attacks.json /home/sin/security-logs/archive/attacks-$DATE.json
+    > /home/sin/security-logs/attacks.json
+fi

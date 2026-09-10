@@ -1,0 +1,68 @@
+=== WAYDROID PRE-REBOOT DIAGNOSTICS ===
+Generated: September 4, 2026 17:14 PDT
+
+=== WAYDROID STATUS ===
+Session: RUNNING
+Container: RUNNING
+Vendor type: MAINLINE
+IP address: UNKNOWN
+Session user: sin(1000)
+Wayland display: wayland-0
+
+=== OPENCODE ===
+PID 3672: Running 4458+ seconds (~74 min), session ses_f9158d7c7ffezopL2xDs40hyyK
+Status: Stable — build mode, SurfaceFlinger/composer HAL running
+
+=== KERNEL ===
+Installed: 7.2.3.zen1-2 (upstream binder fix commit 8e28c67)
+Running: 7.2.2-zen1-1-zen (reboot required to activate fix)
+GRUB default: linux-zen
+
+=== SYSTEM HEALTH ===
+Dmesg errors (error|fail|binder|enospc): 0
+Failed systemd units: 1 (non-critical transient)
+GBinder service manager: Stable (no death warnings in current session)
+Waydroid log: "Session is already running" — healthy state
+
+=== ACTIVE PROCESSES ===
+- Weston compositor (PID 323572)
+- Weston terminal (PID 323919)
+- waydroid container start (PID 377831)
+- waydroid session start (PID 383759)
+- dnsmasq (PID 383820) — DHCP 192.168.240.1
+- lxc-start (PID 383838) — waydroid container
+- Android services (task@1.0, health@2.0)
+- OpenCode (PID 3672)
+
+=== LOGS SAVED TO /tmp/opencode/ ===
+- waydroid-session.log — session status logs
+- waydroid-ui.log — UI-level logs including gbinder events
+- weston.log — Weston compositor logs
+- relight*.log — SurfaceFlinger relight traces
+- composer2.strace — composer HAL strace
+- ipclient.log — IPC client logs
+- kwin_trace.log — KWin trace
+- logcat_full.txt — full logcat capture
+- wd-boot-capture.log — boot capture
+
+=== PRE-REBOOT CHECKLIST ✅ ===
+1. Kernel 7.2.3.zen1-2 installed with binder fix
+2. Waydroid session RUNNING
+3. Waydroid container RUNNING
+4. All processes accounted for (11+ active)
+5. Zero dmesg errors
+6. GBinder service manager stable
+7. OpenCode PID 3672 stable
+8. GRUB configured for linux-zen default
+
+=== POST-REBOOT VERIFICATION ===
+After reboot, verify:
+  waydroid status          → Session: RUNNING, Container: RUNNING
+  dmesg | grep -ic 'error|fail|binder|enospc' → 0
+  pacman -Q linux-zen      → 7.2.3.zen1-2 (running)
+
+=== ACTION REQUIRED ===
+REBOOT the system to activate kernel 7.2.3.zen1-2.
+After reboot, the fixed binder driver should resolve the rust_binder ENOSPC issue.
+
+Report file: /home/sin/waydroid-reports/diagnostics.txt

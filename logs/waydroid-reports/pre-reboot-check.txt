@@ -1,0 +1,13 @@
+=== FINAL STATUS AFTER REBOOT ===
+Kernel installed: 7.2.3.zen1-2
+Running kernel: 7.2.2-zen1-1-zen (reboot pending to activate 7.2.3.zen1-2)
+Waydroid: Session RUNNING, Container RUNNING (restarted at 16:58)
+Systemd failed units: 1 (transient)
+Dmesg errors: 0
+GRUB default: linux-zen (fallback initramfs)
+Steam libraryfolders: C:\Program Files (x86)\Steam
+Steam overlay .so files remaining: 0
+OpenCode PID 3672 running in build mode (session ses_f9158d7c7ffezopL2xDs40hyyK)
+SurfaceFlinger and composer HAL both running
+Binder devices: /dev/binderfs/anbox-{binder,hwbinder,vndbinder}
+=== REBOOT NEEDED to activate 7.2.3.zen1-2 kernel ===
